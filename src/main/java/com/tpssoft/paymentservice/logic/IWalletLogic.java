@@ -7,10 +7,10 @@ import com.tpssoft.paymentservice.dto.CardDto;
 @Component
 public interface IWalletLogic {
 
-	boolean updateBalance(String ack, String userId, double amount);
+	boolean updateBalance(String idToken, String ack, String userId, double amount);
 
-	CardDto getCardInformation(String userId);
+	CardDto getCardInformation(String idToken, String userId, String cardId);
 
-	String getWalletId(String userId);
+	String getWalletId(String idToken, String userId);
 
 }

@@ -13,10 +13,10 @@ public class TransactionDto {
 	private Double fee;
 
 	private String category;
+	
+	private String beneficiary;
 
 	private String remitter;
-
-	private String beneficiary;
 
 	private String status;
 

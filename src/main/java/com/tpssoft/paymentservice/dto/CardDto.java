@@ -13,6 +13,7 @@ public class CardDto {
 	private String cardId;
 	private String firstName;
 	private String lastName;
+	private String cardHolder;
 	private String cardNumber;
 	private LocalDate expDate;
 	private String cvv;

@@ -14,15 +14,15 @@ public class WalletLogicImpl implements IWalletLogic {
 	private WalletFeignServiceUtils walletFeignServiceUtils;
 	
 	@Override
-	public CardDto getCardInformation(String userId) {
-		CardDto cardDto = walletFeignServiceUtils.getInformationOfCard(userId);
+	public CardDto getCardInformation(String idToken, String userId, String cardId) {
+		CardDto cardDto = walletFeignServiceUtils.getInformationOfCard(idToken, userId, cardId);
 		return cardDto;
 	}
 	
 	@Override
-	public boolean updateBalance(String ack, String userId, double amount) {
+	public boolean updateBalance(String idToken, String ack, String userId, double amount) {
 		if (ack.equals("Success")) {
-			ResponseEntity<String> response = walletFeignServiceUtils.updateBalance(userId, amount);
+			ResponseEntity<String> response = walletFeignServiceUtils.updateBalance(idToken, userId, amount);
 			if (response.getStatusCode().value() == 200)
 				return true;			
 		}
@@ -30,7 +30,7 @@ public class WalletLogicImpl implements IWalletLogic {
 	}
 	
 	@Override
-	public String getWalletId(String userId) {
-		return walletFeignServiceUtils.getWalletId(userId);
+	public String getWalletId(String idToken, String userId) {
+		return walletFeignServiceUtils.getWalletId(idToken, userId).getBody();
 	}
 }

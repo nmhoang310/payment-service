@@ -12,8 +12,8 @@ public class PaymentServiceImpl implements IPaymentService {
 	private IPaymentLogic paymentLogic;
 
 	@Override
-	public boolean topUp(String userId, double amount) {
-		return paymentLogic.topUp(userId, amount);
+	public boolean topUp(String idToken, String userId, String cardId, double amount) {
+		return paymentLogic.topUp(idToken, userId, cardId, amount);
 	}
 
 }

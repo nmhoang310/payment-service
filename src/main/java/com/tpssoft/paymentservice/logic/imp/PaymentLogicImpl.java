@@ -25,12 +25,12 @@ public class PaymentLogicImpl implements IPaymentLogic {
 	@Autowired
 	private IPaypalLogic paypalLogic;
 
-	public boolean topUp(String userId, double amount) {
+	public boolean topUp(String idToken, String userId, String cardId, double amount) {
 		// *****validate amount
 		// ***userid
 
 		/* get card */
-		CardDto cardDto = walletLogic.getCardInformation(userId);
+		CardDto cardDto = walletLogic.getCardInformation(idToken, userId, cardId);
 
 		/* request to direct payment paypal api */
 		double amountNotRound = (amount + FIXEDFEE)/(1-RATE);
@@ -39,7 +39,7 @@ public class PaymentLogicImpl implements IPaymentLogic {
 		PaypalDirectPaymentResponseDto directPaymentResponse = paypalLogic.sendDirectPaymentRequest(cardDto, amountSendToPaypal);
 
 		/* update balance */
-		if (!walletLogic.updateBalance(directPaymentResponse.getAck(), userId, amount)) {
+		if (!walletLogic.updateBalance(idToken, directPaymentResponse.getAck(), userId, amount)) {
 			System.out.println("Update Balance Fail");
 			return false;
 		}
@@ -49,14 +49,12 @@ public class PaymentLogicImpl implements IPaymentLogic {
 		LocalDateTime transactionDate = LocalDateTime.now();
 		String category = "Top up";
 		String status = TransactionStatus.COMPLETED.toString();
-		String cardId = cardDto.getCardId();
-		String walletId = walletLogic.getWalletId(userId);
-		String remitter = cardDto.getFirstName() + " " + cardDto.getLastName();		
-		/* wait user-service to get name user of wallet */
-		String beneficiary = "?";
+		String walletId = walletLogic.getWalletId(idToken, userId);
+		String beneficiary = cardDto.getCardNumber().substring(cardDto.getCardNumber().length() - 4);
+		String remitter = cardDto.getFirstName() + " " + cardDto.getLastName();
 				
 		
-		boolean resultCreateTransaction = transactionLogic.createTransaction(transactionId, transactionDate, category, status, cardId, walletId, remitter, beneficiary, fee, amount);
+		boolean resultCreateTransaction = transactionLogic.createTransaction(idToken, transactionId, transactionDate, category, status, cardId, walletId, beneficiary, remitter, fee, amount);
 		if (!resultCreateTransaction) {
 			System.out.println("Create Transaction Fail");
 			return false;

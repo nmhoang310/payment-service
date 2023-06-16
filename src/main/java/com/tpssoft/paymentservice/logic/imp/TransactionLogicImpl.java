@@ -16,7 +16,7 @@ public class TransactionLogicImpl implements ITransactionLogic {
 	private AccountingFeignServiceUtils accountingFeignServiceUtils;
 	
 	@Override
-	public boolean createTransaction(String transactionId, LocalDateTime transactionDate, String category, String status, String cardId, String walletId, String remitter, String beneficiary, double fee, double amount) {
+	public boolean createTransaction(String idToken, String transactionId, LocalDateTime transactionDate, String category, String status, String cardId, String walletId, String beneficiary, String remitter, double fee, double amount) {
 		TransactionDto transaction = new TransactionDto();
 		transaction.setTransactionId(transactionId);
 		transaction.setAmount(amount);
@@ -25,10 +25,10 @@ public class TransactionLogicImpl implements ITransactionLogic {
 		transaction.setStatus(status);
 		transaction.setCardId(cardId);
 		transaction.setWalletId(walletId);		
-		transaction.setRemitter(remitter);
 		transaction.setBeneficiary(beneficiary);
+		transaction.setRemitter(remitter);
 		transaction.setFee(fee);
-		ResponseEntity<String> responseAccounting = accountingFeignServiceUtils.createTransaction(transaction);
+		ResponseEntity<String> responseAccounting = accountingFeignServiceUtils.createTransaction(idToken, transaction);
 		if (responseAccounting.getStatusCode().value() == 200)
 			return true;
 		return false;
